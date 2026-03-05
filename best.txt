@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BeyondBen</title>
+<style>
+body{margin:0;font-family:Arial;background:#0f172a;color:white}
+header{background:#020617;padding:20px;text-align:center;font-size:32px;font-weight:bold}
+#topbar{display:flex;justify-content:center;gap:10px;padding:10px;background:#111827;flex-wrap:wrap}
+#search{width:300px;padding:10px;border-radius:8px;border:none;font-size:16px}
+button.cat{padding:10px 14px;border:none;border-radius:8px;background:#334155;color:white;cursor:pointer}
+button.cat:hover{background:#475569}
+#games{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:18px;padding:20px}
+.game{background:#1e293b;border-radius:12px;overflow:hidden;cursor:pointer;transition:.2s;text-align:center}
+.game:hover{transform:scale(1.05)}
+.game img{width:100%;height:120px;object-fit:cover}
+.game h3{margin:10px;font-size:15px}
+#player{position:fixed;top:0;left:0;width:100%;height:100%;background:black;display:none;flex-direction:column;z-index:10}
+#player iframe{flex:1;border:none}
+#close{background:red;color:white;border:none;padding:12px;font-size:18px;cursor:pointer}
+footer{text-align:center;padding:15px;background:#020617;color:#94a3b8}
+</style>
+</head>
+<body>
+<header>🎮 BeyondBen</header>
+<div id="topbar">
+<input id="search" placeholder="Search games..." onkeyup="searchGames()">
+<button class="cat" onclick="filter('all')">All</button>
+<button class="cat" onclick="filter('puzzle')">Puzzle</button>
+<button class="cat" onclick="filter('math')">Math</button>
+<button class="cat" onclick="filter('skill')">Skill</button>
+<button class="cat" onclick="filter('logic')">Logic</button>
+</div>
+<div id="games"></div>
+<div id="player">
+<button id="close" onclick="closeGame()">Close Game</button>
+<iframe id="frame"></iframe>
+</div>
+<footer>Free browser games • Play instantly</footer>
+<script>
+const games=[
+{name:'2048',cat:'math',img:'https://upload.wikimedia.org/wikipedia/commons/1/18/2048_game.png',url:'https://2048game.com/'},
+{name:'Sudoku',cat:'logic',img:'https://upload.wikimedia.org/wikipedia/commons/f/ff/Sudoku-by-L2G-20050714_standardized_layout.svg',url:'https://sudoku.com/'},
+{name:'Snake',cat:'skill',img:'https://upload.wikimedia.org/wikipedia/commons/6/65/Snake_game.jpg',url:'https://playsnake.org/'},
+{name:'Tetris',cat:'puzzle',img:'https://upload.wikimedia.org/wikipedia/commons/7/7c/Tetris_gameplay.png',url:'https://tetris.com/play-tetris'},
+{name:'Pacman',cat:'skill',img:'https://upload.wikimedia.org/wikipedia/commons/0/0a/Pacman.png',url:'https://www.retrogames.cc/embed/40763-pac-man.html'},
+{name:'Minesweeper',cat:'logic',img:'https://upload.wikimedia.org/wikipedia/commons/5/5e/Minesweeper_gameplay.png',url:'https://minesweeperonline.com/'},
+{name:'Run 3',cat:'skill',img:'https://i.imgur.com/TQKQZ6K.png',url:'https://ubg100.github.io/games/run-3/index.html'},
+{name:'Slope',cat:'skill',img:'https://i.imgur.com/1X4QZ8v.png',url:'https://ubg100.github.io/games/slope/index.html'},
+{name:'Drift Boss',cat:'skill',img:'https://i.imgur.com/l9XH7oB.png',url:'https://ubg100.github.io/games/drift-boss/index.html'},
+{name:'Basketball Stars',cat:'skill',img:'https://i.imgur.com/ckV9R4F.png',url:'https://ubg100.github.io/games/basketball-stars/index.html'},
+{name:'Chess',cat:'logic',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Chess_board_opening_staunton.jpg/640px-Chess_board_opening_staunton.jpg',url:'https://www.chess.com/play/computer'},
+{name:'Checkers',cat:'logic',img:'https://upload.wikimedia.org/wikipedia/commons/3/32/Draughts.png',url:'https://cardgames.io/checkers/'},
+{name:'Tangram Puzzle',cat:'puzzle',img:'https://upload.wikimedia.org/wikipedia/commons/9/9c/Tangram_set_00.jpg',url:'https://www.mathsisfun.com/games/tangram.html'},
+{name:'Tower of Hanoi',cat:'logic',img:'https://upload.wikimedia.org/wikipedia/commons/6/60/Tower_of_Hanoi.jpeg',url:'https://www.mathsisfun.com/games/towerofhanoi.html'},
+{name:'Pattern Memory',cat:'math',img:'https://i.imgur.com/w1a9x7K.png',url:'https://humanbenchmark.com/tests/memory'}
+];
+function loadGames(list){
+const container=document.getElementById('games');
+container.innerHTML='';
+list.forEach(g=>{
+const card=document.createElement('div');
+card.className='game';
+card.innerHTML=`<img src="${g.img}"><h3>${g.name}</h3>`;
+card.onclick=()=>playGame(g.url);
+container.appendChild(card);
+});
+}
+function playGame(url){
+ document.getElementById('player').style.display='flex';
+ document.getElementById('frame').src=url;
+}
+function closeGame(){
+ document.getElementById('player').style.display='none';
+ document.getElementById('frame').src='';
+}
+function searchGames(){
+const text=document.getElementById('search').value.toLowerCase();
+const filtered=games.filter(g=>g.name.toLowerCase().includes(text));
+loadGames(filtered);
+}
+function filter(cat){
+if(cat==='all'){loadGames(games);return}
+loadGames(games.filter(g=>g.cat===cat));
+}
+loadGames(games);
+</script>
+</body>
+</html>
